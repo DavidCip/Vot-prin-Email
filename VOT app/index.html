@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="a.css">
+        <title>Sistem de Vot</title>
+    </head>
+    <body>
+        <h2>Votează prin Email!</h2>
+        <input type="email" id="email" placeholder="Introduceti adresa de email"><br><br>
+        Alegerea ta:
+        <select id="vote">
+            <option value="Option1">Prima Opțiune</option>
+            <option value="Option2">A doua Opțiune</option>
+        </select>
+        <br><br>
+        <button onclick="submitVote();">Votează!</button>
+
+        <h2>Rezultate:</h2>
+        <p>Prima Opțiune: <span id="option1Count">0</span></p>
+        <p>A doua Opțiune: <span id="option2Count">0</span></p>
+
+        <script>
+            function submitVote() {
+                var email = document.getElementById("email").value.trim();
+                var vote = document.getElementById("vote").value;
+
+                if (!email) {
+                    alert("Introduceti o adresa de email valida.");
+                    return;
+                }
+
+                if (!validateEmail(email)) {
+                    alert("Adresa de email este invalida.");
+                    return;
+                }
+
+                if (localStorage.getItem(email)) {
+                    alert("Acest email a fost deja folosit pentru vot.");
+                } else {
+                    localStorage.setItem(email, vote);
+                    alert("Votul a fost inregistrat cu succes.");
+                    updateResults();
+                }
+            }
+
+            function updateResults() {
+                var counts = { Option1: 0, Option2: 0, Option3: 0 };
+
+                for (var i = 0; i < localStorage.length; i++) {
+                    var key = localStorage.key(i);
+                    var vote = localStorage.getItem(key);
+
+                    if (counts[vote] !== undefined) {
+                        counts[vote]++;
+                    }
+                }
+
+                document.getElementById("option1Count").innerText = counts["Option1"];
+                document.getElementById("option2Count").innerText = counts["Option2"];
+            }
+
+            function validateEmail(email) {
+                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailPattern.test(email);
+            }
+        </script>
+    </body>
+</html>
